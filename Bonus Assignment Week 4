@@ -1,0 +1,190 @@
+#include <iostream>
+using namespace std;
+//question 1: linked list with memory allocation
+#include <iostream>
+struct MyNode {
+    int nodeData;
+    MyNode* nextNode;
+    MyNode(int data) : nodeData(data), nextNode(nullptr) {}  // Constructor
+};
+class SimpleList {
+private:
+    MyNode* headOfTheList;
+
+public:
+    SimpleList() {
+        headOfTheList = nullptr;
+    }
+    void addANewNode(int theValue) {
+        MyNode* newNode = new MyNode(theValue);
+        newNode->nextNode = headOfTheList;
+        headOfTheList = newNode;
+    }
+    void clearTheList() {
+        MyNode* currentNode = headOfTheList;
+        while (currentNode != nullptr) {
+            MyNode* temp = currentNode;
+            currentNode = currentNode->nextNode;
+            delete temp;
+        }
+        headOfTheList = nullptr;
+    }
+    void printTheList() {
+        MyNode* currentNode = headOfTheList;
+        if (currentNode == nullptr) {
+           cout << "The list is empty!\n";
+            return;
+        }
+        while (currentNode != nullptr) {
+            cout << currentNode->nodeData << " --> ";
+            currentNode = currentNode->nextNode;
+        }
+       cout << "NULL\n";
+    }
+    ~SimpleList() {
+        clearTheList();
+    }
+};
+
+int main() {
+    SimpleList myList;
+    myList.addANewNode(20);
+    myList.addANewNode(40);
+    myList.addANewNode(60);
+    cout << "Before clearing:\n";
+    myList.printTheList();
+    myList.clearTheList();
+    cout << "After clearing:\n";
+    myList.printTheList();
+
+    return 0;
+}
+
+//question 2.1 : sorted singly linked list
+#include <iostream>
+struct ListElement {
+    int theNumber;
+    ListElement* nextElement;
+
+    ListElement(int num) : theNumber(num), nextElement(nullptr) {}
+};
+class MySortedList {
+private:
+    ListElement* theHead;
+public:
+    MySortedList() {
+        theHead = nullptr;
+    }
+    void insertInOrder(int newNumber) {
+        ListElement* newElement = new ListElement(newNumber);
+        if (theHead == nullptr || theHead->theNumber >= newNumber) {
+            newElement->nextElement = theHead;
+            theHead = newElement;
+            return;
+        }
+        ListElement* current = theHead;
+        while (current->nextElement != nullptr && current->nextElement->theNumber < newNumber) {
+            current = current->nextElement;
+        }
+        newElement->nextElement = current->nextElement;
+        current->nextElement = newElement;
+    }
+    void displayTheList() {
+        ListElement* current = theHead;
+        if (current == nullptr) {
+           cout << "The sorted list is empty!\n";
+            return;
+        }
+        while (current != nullptr) {
+            cout << current->theNumber << " --> ";
+            current = current->nextElement;
+        }
+        cout << "NULL\n";
+    }
+    ~MySortedList() {
+        ListElement* current = theHead;
+        while (current != nullptr) {
+            ListElement* temp = current;
+            current = current->nextElement;
+            delete temp;
+        }
+    }
+};
+
+int main() {
+    MySortedList sortedList;
+    sortedList.insertInOrder(20);
+    sortedList.insertInOrder(10);
+    sortedList.insertInOrder(40);
+    sortedList.insertInOrder(25);
+    sortedList.displayTheList();
+    return 0;
+}
+//question 2.2 :sorted doubly linked list
+#include <iostream>
+struct DoubleListNode {
+    int theValue;
+    DoubleListNode* nextOne;
+    DoubleListNode* previousOne;
+
+    DoubleListNode(int value) : theValue(value), nextOne(nullptr), previousOne(nullptr) {}
+};
+class DoubleSortedList {
+private:
+    DoubleListNode* theFirst;
+public:
+    DoubleSortedList() {
+        theFirst = nullptr;
+    }
+    void insertInSortedOrder(int valueToInsert) {
+        DoubleListNode* newNode = new DoubleListNode(valueToInsert);
+
+        if (theFirst == nullptr || theFirst->theValue >= valueToInsert) {
+            newNode->nextOne = theFirst;
+            if (theFirst != nullptr) {
+                theFirst->previousOne = newNode;
+            }
+            theFirst = newNode;
+            return;
+        }
+        DoubleListNode* current = theFirst;
+        while (current->nextOne != nullptr && current->nextOne->theValue < valueToInsert) {
+            current = current->nextOne;
+        }
+        newNode->nextOne = current->nextOne;
+        if (current->nextOne != nullptr) {
+            current->nextOne->previousOne = newNode;
+        }
+        current->nextOne = newNode;
+        newNode->previousOne = current;
+    }
+    void showTheList() {
+        DoubleListNode* current = theFirst;
+        if (current == nullptr) {
+            cout << "The list is empty.\n";
+            return;
+        }
+        while (current != nullptr) {
+          cout << current->theValue << " <--> ";
+            current = current->nextOne;
+        }
+       cout << "NULL\n";
+    }
+    ~DoubleSortedList() {
+        DoubleListNode* current = theFirst;
+        while (current != nullptr) {
+            DoubleListNode* temp = current;
+            current = current->nextOne;
+            delete temp;
+        }
+    }
+};
+int main() {
+    DoubleSortedList myList;
+    myList.insertInSortedOrder(30);
+    myList.insertInSortedOrder(50);
+    myList.insertInSortedOrder(20);
+    myList.insertInSortedOrder(10);
+    myList.showTheList();
+    return 0;
+}
